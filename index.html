@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Study Challenge — Statistik</title>
+  <title>Study Challenge — Statistiken</title>
 
   <style>
     :root {
@@ -14,6 +14,7 @@
       --muted: #9da4b2;
       --line: #2b3040;
       --accent: #7c9cff;
+      --accent-soft: rgba(124,156,255,.16);
       --gold: #f4c95d;
       --green: #6dd18c;
       --radius: 18px;
@@ -33,14 +34,12 @@
     }
 
     .wrap {
-      width: min(1050px, calc(100% - 32px));
+      width: min(1100px, calc(100% - 32px));
       margin: 0 auto;
       padding: 42px 0 70px;
     }
 
-    header {
-      margin-bottom: 28px;
-    }
+    header { margin-bottom: 28px; }
 
     .eyebrow {
       color: var(--accent);
@@ -59,7 +58,7 @@
     }
 
     .subtitle {
-      max-width: 720px;
+      max-width: 760px;
       color: var(--muted);
       margin: 0;
     }
@@ -109,17 +108,19 @@
 
     .card.half { grid-column: span 6; }
 
-    @media (max-width: 800px) {
+    @media (max-width: 850px) {
       .card.half { grid-column: span 12; }
     }
 
     .card-head {
       display: flex;
       justify-content: space-between;
-      align-items: start;
+      align-items: flex-start;
       gap: 16px;
       margin-bottom: 18px;
     }
+
+    .card-head > div:first-child { min-width: 0; }
 
     h2 {
       margin: 0;
@@ -159,7 +160,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 560px;
+      min-width: 620px;
     }
 
     th, td {
@@ -189,47 +190,11 @@
       font-size: .78rem;
     }
 
-    .bar-row {
-      display: grid;
-      grid-template-columns: 110px 1fr 90px;
-      gap: 10px;
-      align-items: center;
-      margin: 12px 0;
-    }
-
-    .bar-bg {
-      height: 10px;
-      background: #282d3a;
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .bar {
-      height: 100%;
-      width: 0;
-      background: linear-gradient(90deg, var(--accent), #b7c7ff);
-      border-radius: inherit;
-      transition: width .45s ease;
-    }
-
-    .right { text-align: right; }
-
-    .empty {
-      color: var(--muted);
-      padding: 18px 0 6px;
-    }
-
-    .note {
-      color: var(--muted);
-      font-size: .82rem;
-      margin-top: 14px;
-    }
-
     .controls {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     select, button {
@@ -247,9 +212,255 @@
 
     button:hover { border-color: #47506a; }
 
-    .error {
-      color: #ff9c9c;
+    button:disabled {
+      cursor: not-allowed;
+      opacity: .45;
     }
+
+    .week-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
+    .week-subtitle {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    .chart-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 15px;
+      background: rgba(255,255,255,.018);
+    }
+
+    .chart-card + .chart-card { margin-top: 14px; }
+
+    .winner-banner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(124,156,255,.22);
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+
+    .winner-banner .winner-value {
+      font-size: 1.35rem;
+      font-weight: 800;
+    }
+
+    .bar-chart {
+      display: grid;
+      gap: 12px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: minmax(90px, 120px) 1fr 88px;
+      gap: 10px;
+      align-items: center;
+      margin: 0;
+    }
+
+    .bar-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .bar-bg {
+      height: 12px;
+      background: #282d3a;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      min-width: 2px;
+      background: linear-gradient(90deg, var(--accent), #b7c7ff);
+      border-radius: inherit;
+      transition: width .4s ease, opacity .25s ease;
+    }
+
+    .right { text-align: right; }
+
+    .empty {
+      color: var(--muted);
+      padding: 18px 0 6px;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: .82rem;
+      margin-top: 14px;
+    }
+
+    .weekday-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      margin: 0 0 12px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: .78rem;
+    }
+
+    .legend-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+    }
+
+    .weekday-chart {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(70px, 1fr));
+      gap: 10px;
+      align-items: end;
+      min-height: 280px;
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+      overflow-x: auto;
+    }
+
+    .weekday-column {
+      min-width: 70px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 8px;
+      min-height: 250px;
+    }
+
+    .weekday-bars {
+      height: 205px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 5px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 4px;
+    }
+
+    .weekday-person-bar {
+      width: 20px;
+      min-height: 2px;
+      border-radius: 7px 7px 2px 2px;
+      opacity: .72;
+      transition: opacity .2s ease, transform .2s ease, filter .2s ease;
+      position: relative;
+    }
+
+    .weekday-person-bar:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    .weekday-person-bar.highlighted {
+      opacity: 1;
+      box-shadow: 0 0 0 2px rgba(255,255,255,.22);
+    }
+
+    .weekday-person-bar.dimmed { opacity: .14; }
+
+    .weekday-value {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(100% + 4px);
+      font-size: .65rem;
+      color: var(--text);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .weekday-label {
+      text-align: center;
+      color: var(--muted);
+      font-size: .79rem;
+      font-weight: 700;
+    }
+
+    .weekday-summary {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(70px, 1fr));
+      gap: 10px;
+      margin-top: 9px;
+    }
+
+    .weekday-summary > div {
+      text-align: center;
+      color: var(--muted);
+      font-size: .73rem;
+    }
+
+    .person-select {
+      min-width: 170px;
+    }
+
+    .data-details {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.02);
+      overflow: hidden;
+    }
+
+    .data-details summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 15px 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .data-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .data-details summary::after {
+      content: "⌄";
+      color: var(--muted);
+      font-size: 1.15rem;
+      transition: transform .2s ease;
+    }
+
+    .data-details[open] summary::after {
+      transform: rotate(180deg);
+    }
+
+    .data-details-content {
+      padding: 0 16px 16px;
+    }
+
+    .data-details .card-head {
+      margin-bottom: 14px;
+    }
+
+    .selected-habit {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.025);
+      border: 1px solid var(--line);
+    }
+
+    .error { color: #ff9c9c; }
 
     code {
       color: #c9d3ff;
@@ -261,6 +472,21 @@
       color: var(--muted);
       font-size: .78rem;
     }
+
+    @media (max-width: 700px) {
+      .wrap { width: min(100% - 20px, 1100px); padding-top: 24px; }
+      .card { padding: 17px; }
+      .card-head { flex-direction: column; }
+      .controls { width: 100%; }
+      .controls select { max-width: 100%; }
+      .bar-row { grid-template-columns: 82px 1fr 70px; }
+      .weekday-chart {
+        grid-template-columns: repeat(7, 86px);
+      }
+      .weekday-summary {
+        grid-template-columns: repeat(7, 86px);
+      }
+    }
   </style>
 </head>
 
@@ -269,16 +495,15 @@
     <header>
       <div class="eyebrow">Study Challenge</div>
       <h1>Statistiken</h1>
-      <p class="subtitle">
-        
-      </p>
+      <p class="subtitle">Wöchentliche Gewinner, Gesamtlernzeit und eure Lerngewohnheiten.</p>
+
       <div class="status-row">
         <div class="pill">
           <span class="dot" id="statusDot"></span>
-          <span id="statusText">Loading data…</span>
+          <span id="statusText">Daten werden geladen …</span>
         </div>
-        <div class="pill" id="entryCount">0 entries</div>
-        <div class="pill" id="peopleCount">0 people</div>
+        <div class="pill" id="entryCount">0 Einträge</div>
+        <div class="pill" id="peopleCount">0 Personen</div>
       </div>
     </header>
 
@@ -287,24 +512,33 @@
       <article class="card">
         <div class="card-head">
           <div>
-            <h2>Gewinner in den letzten Wochen</h2>
+            <h2>Wöchentliche Gewinner</h2>
             <p class="description">
+              Wähle eine beliebige Woche aus und vergleiche die Lernzeit aller Personen.
+              Die Woche wird anhand ihres Montags benannt.
             </p>
           </div>
 
           <div class="controls">
+            <button id="prevWeekButton" title="Vorherige Woche">←</button>
             <label class="mini" for="weekSelect">Woche:</label>
             <select id="weekSelect"></select>
+            <button id="nextWeekButton" title="Nächste Woche">→</button>
           </div>
         </div>
 
-        <div id="currentWeekWinner"></div>
+        <div id="weeklyWinnerBody"></div>
+
+        <div class="chart-card">
+          <div id="weeklyBars" class="bar-chart"></div>
+        </div>
 
         <div class="table-wrap" style="margin-top:18px;">
           <table>
             <thead>
               <tr>
                 <th>Woche</th>
+                <th>Zeitraum</th>
                 <th>Sieger</th>
                 <th>Minuten</th>
                 <th>Stunden</th>
@@ -313,9 +547,27 @@
             <tbody id="weeklyTable"></tbody>
           </table>
         </div>
+
+        <p class="note">
+          Bei Gleichstand bekommen alle beteiligten Personen einen Wochen-Sieg.
+        </p>
       </article>
 
-      <!-- 2. MOST TIME STUDIED -->
+      <!-- 2. MOST WEEKLY WINS -->
+      <article class="card half">
+        <div class="card-head">
+          <div>
+            <h2>Wer hat die meisten Wochen gewonnen?</h2>
+            <p class="description">Anzahl gewonnener Wochen über den gesamten verfügbaren Zeitraum.</p>
+          </div>
+        </div>
+
+        <div id="weeklyWinLeader" class="empty"></div>
+        <div id="weeklyWinsBars" class="bar-chart" style="margin-top:18px;"></div>
+        <p class="note">Bei einem geteilten ersten Platz zählt die Woche für jede Gewinnerin bzw. jeden Gewinner.</p>
+      </article>
+
+      <!-- 3. MOST TIME STUDIED -->
       <article class="card half">
         <div class="card-head">
           <div>
@@ -324,70 +576,94 @@
           </div>
         </div>
 
-        <div id="mostStudiedWinner" class="empty">No data yet.</div>
-
-        <div id="allTimeBars" style="margin-top:18px;"></div>
+        <div id="mostStudiedWinner" class="empty">Noch keine Daten.</div>
+        <div id="allTimeBars" style="margin-top:18px;" class="bar-chart"></div>
       </article>
 
-      <!-- 3. CONSISTENCY -->
+      <!-- 4. WEEKDAY HABITS -->
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h2>An welchen Wochentagen wird am häufigsten gelernt?</h2>
+            <p class="description">
+              Gezählt werden unterschiedliche Lerntage pro Person. Ohne Auswahl siehst du alle Personen zusammen;
+              mit einer Auswahl wird die betreffende Person hervorgehoben.
+            </p>
+          </div>
+
+          <div class="controls">
+            <label class="mini" for="personSelect">Person:</label>
+            <select id="personSelect" class="person-select"></select>
+          </div>
+        </div>
+
+        <div class="weekday-legend" id="weekdayLegend"></div>
+        <div id="weekdayChart" class="weekday-chart"></div>
+        <div id="weekdaySummary" class="weekday-summary"></div>
+        <div id="selectedHabit" class="selected-habit"></div>
+        <p class="note">
+          Mehrere Einträge am selben Kalendertag zählen als ein Lerntag. Die Reihenfolge ist Montag bis Sonntag.
+        </p>
+      </article>
+
+      <!-- 5. CONSISTENCY -->
       <article class="card half">
         <div class="card-head">
           <div>
             <h2>Beständigkeit</h2>
-            
+            <p class="description">Durchschnittliche Zahl unterschiedlicher Lerntage pro aufgezeichneter Woche.</p>
           </div>
         </div>
 
-        <div id="consistencyBody" class="empty">No data yet.</div>
-
-        
+        <div id="consistencyBody" class="empty">Noch keine Daten.</div>
       </article>
 
-      <!-- Debug / data preview -->
+      <!-- 6. DATA COLLECTION -->
       <article class="card">
-        <div class="card-head">
-          <div>
-            <h2>Datensammlung</h2>
-            <p class="description">
-              Aufgezeichnete Einträge
-            </p>
-          </div>
-          <button id="reloadButton">Reload</button>
-        </div>
+        <details class="data-details">
+          <summary>Datensammlung</summary>
+          <div class="data-details-content">
+            <div class="card-head">
+              <div>
+                <h2>Datensammlung</h2>
+                <p class="description">Aufgezeichnete Einträge aus der Lern-Challenge.</p>
+              </div>
+              <button id="reloadButton">Neu laden</button>
+            </div>
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Timestamp</th>
-                <th>Name</th>
-                <th>Minutes</th>
-              </tr>
-            </thead>
-            <tbody id="rawTable"></tbody>
-          </table>
-        </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Datum</th>
+                    <th>Name</th>
+                    <th>Minuten</th>
+                  </tr>
+                </thead>
+                <tbody id="rawTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </details>
       </article>
     </section>
 
     <footer>
-      Dehao reserviert sich das Recht, diese Daten an die CKP (Chinesische Kommunistische Partei) weiterzugeben, damit die Kinder sehen wie faul wir sind. Durch das Lesen dieser Nachricht sind Sie damit offiziell Einverstanden.
+      Dehao reserviert sich das Recht, diese Daten an die CKP (Chinesische Kommunistische Partei) weiterzugeben,
+      damit die Kinder sehen wie faul wir sind. Durch das Lesen dieser Nachricht sind Sie damit offiziell Einverstanden.
     </footer>
   </main>
 
 <script>
 /* =========================================================
-   CONFIGURATION
+   KONFIGURATION
    ========================================================= */
 
 const HISTORY_URL =
   "https://script.google.com/macros/s/AKfycbyV07BpX_MIyFJqrdKJqMZ9qHvguDWIX01L5IN3MiFg1u3BnW709ImXi3F4U4Sk2Ef-8w/exec?mode=history";
 
-
 /* =========================================================
-   OPTIONAL DEMO DATA
-   If the live endpoint cannot be reached, the page falls
-   back to this data so you can still test the statistics.
+   DEMO-DATEN
    ========================================================= */
 
 const DEMO_ENTRIES = [
@@ -414,26 +690,50 @@ const DEMO_ENTRIES = [
   { timestamp: "2026-08-20T15:00:00Z", name: "Alex",    minutes: 60 },
 ];
 
-
 /* =========================================================
-   HELPERS
+   HILFSFUNKTIONEN
    ========================================================= */
 
+const MONTHS = [
+  "Januar", "Februar", "März", "April", "Mai", "Juni",
+  "Juli", "August", "September", "Oktober", "November", "Dezember"
+];
+
+const WEEKDAYS = [
+  "Montag", "Dienstag", "Mittwoch", "Donnerstag",
+  "Freitag", "Samstag", "Sonntag"
+];
+
+const WEEKDAY_SHORT = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function formatHours(minutes) {
-  return (minutes / 60).toFixed(1) + " h";
+  return (Number(minutes) / 60).toFixed(1) + " h";
 }
 
 function formatDate(dateString) {
-  return new Date(dateString).toLocaleDateString(undefined, {
+  return new Date(dateString).toLocaleDateString("de-DE", {
     year: "numeric",
     month: "short",
     day: "numeric"
   });
 }
 
+function pad2(n) {
+  return String(n).padStart(2, "0");
+}
+
 /*
-  Monday is day 0 for our weekly grouping.
-  This mirrors the Monday-based week used in the Sheet.
+  Monday is the first day of our weekly grouping.
+  This matches the existing Monday-Sunday competition logic.
 */
 function getWeekStart(timestamp) {
   const d = new Date(timestamp);
@@ -443,77 +743,90 @@ function getWeekStart(timestamp) {
   d.setHours(0, 0, 0, 0);
   d.setDate(d.getDate() - daysSinceMonday);
 
-  return d.toISOString().split("T")[0];
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
+function dateFromKey(key) {
+  const [year, month, day] = key.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function dateKeyLocal(timestamp) {
+  const d = new Date(timestamp);
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
+function getWeekRange(weekStartKey) {
+  const start = dateFromKey(weekStartKey);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 6);
+
+  const options = { day: "numeric", month: "short" };
+  return `${start.toLocaleDateString("de-DE", options)} – ${end.toLocaleDateString("de-DE", options)}`;
+}
+
+/*
+  We name a week after the month in which its Monday falls.
+  Example:
+    Monday 2 March -> "März – Woche 1"
+    Monday 9 March -> "März – Woche 2"
+*/
+function formatWeekName(weekStartKey) {
+  const start = dateFromKey(weekStartKey);
+  const monthName = MONTHS[start.getMonth()];
+  const weekOfMonth = Math.floor((start.getDate() - 1) / 7) + 1;
+
+  return `${monthName} – Woche ${weekOfMonth}`;
 }
 
 function sortedPeople(entries) {
-  return [...new Set(entries.map(e => e.name))].sort();
+  return [...new Set(entries.map(e => e.name).filter(Boolean))].sort((a, b) =>
+    a.localeCompare(b, "de")
+  );
 }
 
+function personColor(index, total) {
+  const hue = total <= 1 ? 215 : Math.round((index / total) * 310);
+  return `hsl(${hue} 78% 68%)`;
+}
 
 /* =========================================================
-   1. WEEKLY WINNERS
+   1. WÖCHENTLICHE GEWINNER
    ========================================================= */
 
-function computeWeeklyWinners(entries) {
-  /*
-    First build:
-
-      weeklyTotals[weekStart][personName] = total minutes
-
-    Example:
-
-      weeklyTotals["2026-08-17"]["Alex"] = 300
-  */
-
+function computeWeeklyTotals(entries) {
   const weeklyTotals = {};
 
   for (const entry of entries) {
     const week = getWeekStart(entry.timestamp);
 
-    if (!(week in weeklyTotals)) {
-      weeklyTotals[week] = {};
-    }
-
-    if (!(entry.name in weeklyTotals[week])) {
-      weeklyTotals[week][entry.name] = 0;
-    }
+    if (!weeklyTotals[week]) weeklyTotals[week] = {};
+    if (!weeklyTotals[week][entry.name]) weeklyTotals[week][entry.name] = 0;
 
     weeklyTotals[week][entry.name] += Number(entry.minutes);
   }
 
-  /*
-    Now turn each week's totals into a winner.
-    Ties are kept instead of silently picking one person.
-  */
+  return weeklyTotals;
+}
 
+function computeWeeklyWinners(entries) {
+  const weeklyTotals = computeWeeklyTotals(entries);
   const weeklyResults = [];
 
-  for (const week in weeklyTotals) {
+  for (const week of Object.keys(weeklyTotals).sort((a, b) => b.localeCompare(a))) {
     const totals = weeklyTotals[week];
-
-    let highest = -1;
-    let winners = [];
-
-    for (const name in totals) {
-      const minutes = totals[name];
-
-      if (minutes > highest) {
-        highest = minutes;
-        winners = [name];
-      } else if (minutes === highest) {
-        winners.push(name);
-      }
-    }
+    const highest = Math.max(...Object.values(totals));
+    const winners = Object.entries(totals)
+      .filter(([, minutes]) => minutes === highest)
+      .map(([name]) => name);
 
     weeklyResults.push({
       week,
       winners,
-      minutes: highest
+      minutes: highest,
+      totals
     });
   }
-
-  weeklyResults.sort((a, b) => b.week.localeCompare(a.week));
 
   return weeklyResults;
 }
@@ -521,60 +834,139 @@ function computeWeeklyWinners(entries) {
 function renderWeeklyWinners(results) {
   const table = document.getElementById("weeklyTable");
   const select = document.getElementById("weekSelect");
-  const hero = document.getElementById("currentWeekWinner");
+  const body = document.getElementById("weeklyWinnerBody");
 
   table.innerHTML = "";
   select.innerHTML = "";
 
   if (results.length === 0) {
-    hero.innerHTML = '<div class="empty">No weekly data yet.</div>';
+    body.innerHTML = '<div class="empty">Noch keine Wochendaten.</div>';
+    document.getElementById("weeklyBars").innerHTML = "";
     return;
   }
 
   for (const result of results) {
     const option = document.createElement("option");
     option.value = result.week;
-    option.textContent = result.week;
+    option.textContent = `${formatWeekName(result.week)} (${getWeekRange(result.week)})`;
     select.appendChild(option);
 
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${result.week}</td>
-      <td>${result.winners.join(" & ")}</td>
+      <td>${escapeHtml(formatWeekName(result.week))}</td>
+      <td>${escapeHtml(getWeekRange(result.week))}</td>
+      <td>${result.winners.map(escapeHtml).join(" & ")}</td>
       <td>${result.minutes}</td>
       <td>${formatHours(result.minutes)}</td>
     `;
     table.appendChild(tr);
   }
 
-  const mostRecent = results[0];
-
-  hero.innerHTML = `
-    <div class="mini">Aktueller Sieger</div>
-    <div class="winner-name">${mostRecent.winners.join(" & ")}</div>
-    <div class="mini">${mostRecent.minutes} Minuten · ${formatHours(mostRecent.minutes)}</div>
-  `;
-
-  select.value = mostRecent.week;
+  select.value = results[0].week;
+  renderSelectedWeek(results, results[0].week);
 }
 
+function renderSelectedWeek(results, weekKey) {
+  const result = results.find(r => r.week === weekKey);
+  const body = document.getElementById("weeklyWinnerBody");
+  const bars = document.getElementById("weeklyBars");
+
+  if (!result) return;
+
+  const totalPeople = Object.keys(result.totals).length;
+  const sorted = Object.entries(result.totals)
+    .sort((a, b) => b[1] - a[1]);
+
+  const maxMinutes = sorted.length ? sorted[0][1] : 0;
+
+  body.innerHTML = `
+    <div class="winner-banner">
+      <div>
+        <div class="mini">Ausgewählte Woche</div>
+        <div class="week-title">${escapeHtml(formatWeekName(result.week))}</div>
+        <div class="week-subtitle">${escapeHtml(getWeekRange(result.week))}</div>
+      </div>
+      <div>
+        <div class="mini">Sieger</div>
+        <div class="winner-value">${result.winners.map(escapeHtml).join(" & ")}</div>
+        <div class="mini">${result.minutes} Minuten · ${formatHours(result.minutes)}</div>
+      </div>
+    </div>
+  `;
+
+  bars.innerHTML = sorted.map(([name, minutes], index) => {
+    const width = maxMinutes > 0 ? (minutes / maxMinutes) * 100 : 0;
+    const isWinner = result.winners.includes(name);
+
+    return `
+      <div class="bar-row">
+        <div class="bar-label">
+          ${escapeHtml(name)}
+          ${isWinner ? '<span class="badge" style="margin-left:5px;">Sieger</span>' : ""}
+        </div>
+        <div class="bar-bg">
+          <div class="bar" style="width:${width}%"></div>
+        </div>
+        <div class="right">${minutes} min</div>
+      </div>
+    `;
+  }).join("");
+}
 
 /* =========================================================
-   2. MOST TIME STUDIED — CLASS-BASED, LIKE YOUR IDEA
+   2. MEISTE GEWONNENE WOCHEN
    ========================================================= */
 
-/*
-  This is intentionally written in the style you described
-  in your Claude conversation.
+function computeWeeklyWinCounts(results) {
+  const counts = {};
 
-  One object represents one person.
-  The object has:
-      - name
-      - minutes
+  for (const result of results) {
+    for (const winner of result.winners) {
+      counts[winner] = (counts[winner] || 0) + 1;
+    }
+  }
 
-  Then we loop over every entry and add its minutes to the
-  matching person's object.
-*/
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "de"));
+}
+
+function renderWeeklyWinCounts(results) {
+  const leader = document.getElementById("weeklyWinLeader");
+  const bars = document.getElementById("weeklyWinsBars");
+  const ranking = computeWeeklyWinCounts(results);
+
+  if (!ranking.length) {
+    leader.textContent = "Noch keine Daten.";
+    bars.innerHTML = "";
+    return;
+  }
+
+  const maxWins = ranking[0][1];
+  const leaders = ranking.filter(([, wins]) => wins === maxWins).map(([name]) => name);
+
+  leader.innerHTML = `
+    <div class="mini">Aktueller Stand</div>
+    <div class="winner-name">${leaders.map(escapeHtml).join(" & ")}</div>
+    <div class="mini">${maxWins} gewonnene ${maxWins === 1 ? "Woche" : "Wochen"}</div>
+  `;
+
+  bars.innerHTML = ranking.map(([name, wins]) => {
+    const width = maxWins > 0 ? (wins / maxWins) * 100 : 0;
+    return `
+      <div class="bar-row">
+        <div class="bar-label">${escapeHtml(name)}</div>
+        <div class="bar-bg">
+          <div class="bar" style="width:${width}%"></div>
+        </div>
+        <div class="right">${wins} ${wins === 1 ? "Woche" : "Wochen"}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* =========================================================
+   3. MEISTE GESAMTZEIT
+   ========================================================= */
 
 class PersonStats {
   constructor(name) {
@@ -588,55 +980,18 @@ class PersonStats {
 }
 
 function computeMostTimeStudied(entries) {
-  /*
-    Step 1:
-    Create one PersonStats object for every person.
-  */
-
   const people = {};
-  const names = sortedPeople(entries);
-
-  for (const name of names) {
+  for (const name of sortedPeople(entries)) {
     people[name] = new PersonStats(name);
   }
-
-  /*
-    Step 2:
-    Go through every single study entry.
-    Find the matching PersonStats object.
-    Add the entry's minutes.
-  */
 
   for (const entry of entries) {
     people[entry.name].addMinutes(entry.minutes);
   }
 
-  /*
-    Step 3:
-    Compare the class instances to find the maximum.
-  */
-
-  let mostStudied = null;
-
-  for (const name in people) {
-    const person = people[name];
-
-    if (mostStudied === null || person.minutes > mostStudied.minutes) {
-      mostStudied = person;
-    }
-  }
-
-  /*
-    Step 4:
-    Also return the whole set, sorted by minutes, because the
-    website can use that to draw the bars below the headline.
-  */
-
-  const leaderboard = Object.values(people)
-    .sort((a, b) => b.minutes - a.minutes);
-
+  const leaderboard = Object.values(people).sort((a, b) => b.minutes - a.minutes);
   return {
-    winner: mostStudied,
+    winner: leaderboard[0] || null,
     leaderboard
   };
 }
@@ -648,170 +1003,245 @@ function renderMostTimeStudied(result) {
   bars.innerHTML = "";
 
   if (!result.winner) {
-    winnerBox.textContent = "No data yet.";
+    winnerBox.textContent = "Noch keine Daten.";
     return;
   }
 
   winnerBox.innerHTML = `
-    <div class="mini">Momentaner allzeit Sieger</div>
-    <div class="winner-name">${result.winner.name}</div>
+    <div class="mini">Momentaner Allzeit-Stand</div>
+    <div class="winner-name">${escapeHtml(result.winner.name)}</div>
     <div class="big-number">${result.winner.minutes} Min</div>
     <div class="mini">${formatHours(result.winner.minutes)}</div>
   `;
 
   const max = result.leaderboard[0].minutes;
 
-  for (const person of result.leaderboard) {
-    const row = document.createElement("div");
-    row.className = "bar-row";
+  bars.innerHTML = result.leaderboard.map(person => {
+    const percent = max > 0 ? (person.minutes / max) * 100 : 0;
 
-    const percent = max > 0
-      ? (person.minutes / max) * 100
-      : 0;
-
-    row.innerHTML = `
-      <div>${person.name}</div>
-      <div class="bar-bg">
-        <div class="bar" style="width:${percent}%"></div>
+    return `
+      <div class="bar-row">
+        <div class="bar-label">${escapeHtml(person.name)}</div>
+        <div class="bar-bg">
+          <div class="bar" style="width:${percent}%"></div>
+        </div>
+        <div class="right">${person.minutes} min</div>
       </div>
-      <div class="right">${person.minutes} min</div>
     `;
+  }).join("");
+}
 
-    bars.appendChild(row);
+/* =========================================================
+   4. WOCHENTAG-GEWOHNHEITEN
+   ========================================================= */
+
+function weekdayIndex(timestamp) {
+  // JS: Sunday=0 ... Saturday=6
+  const day = new Date(timestamp).getDay();
+  return day === 0 ? 6 : day - 1; // Monday=0 ... Sunday=6
+}
+
+function computeWeekdayHabits(entries) {
+  const people = sortedPeople(entries);
+
+  // daysByPerson[name][weekday] = Set of calendar-date keys
+  const daysByPerson = {};
+  for (const name of people) {
+    daysByPerson[name] = Array.from({ length: 7 }, () => new Set());
+  }
+
+  for (const entry of entries) {
+    const name = entry.name;
+    if (!daysByPerson[name]) continue;
+
+    daysByPerson[name][weekdayIndex(entry.timestamp)].add(dateKeyLocal(entry.timestamp));
+  }
+
+  const counts = {};
+  for (const name of people) {
+    counts[name] = daysByPerson[name].map(set => set.size);
+  }
+
+  return { people, counts };
+}
+
+function renderPersonOptions(people) {
+  const select = document.getElementById("personSelect");
+  select.innerHTML = "";
+
+  const all = document.createElement("option");
+  all.value = "__all__";
+  all.textContent = "Alle Personen";
+  select.appendChild(all);
+
+  people.forEach(name => {
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = name;
+    select.appendChild(option);
+  });
+}
+
+function renderWeekdayHabits(habits, selectedPerson = "__all__") {
+  const legend = document.getElementById("weekdayLegend");
+  const chart = document.getElementById("weekdayChart");
+  const summary = document.getElementById("weekdaySummary");
+  const selectedHabit = document.getElementById("selectedHabit");
+
+  if (!habits.people.length) {
+    legend.innerHTML = "";
+    chart.innerHTML = "";
+    summary.innerHTML = "";
+    selectedHabit.textContent = "Noch keine Daten.";
+    return;
+  }
+
+  const colors = {};
+  habits.people.forEach((name, index) => {
+    colors[name] = personColor(index, habits.people.length);
+  });
+
+  legend.innerHTML = habits.people.map(name => `
+    <div class="legend-item">
+      <span class="legend-dot" style="background:${colors[name]}"></span>
+      <span>${escapeHtml(name)}</span>
+    </div>
+  `).join("");
+
+  const maxCount = Math.max(
+    1,
+    ...habits.people.flatMap(name => habits.counts[name])
+  );
+
+  chart.innerHTML = WEEKDAYS.map((day, weekday) => {
+    const bars = habits.people.map(name => {
+      const count = habits.counts[name][weekday];
+      const height = count > 0 ? Math.max(8, (count / maxCount) * 100) : 2;
+
+      const classes = [
+        "weekday-person-bar",
+        selectedPerson !== "__all__" && selectedPerson === name ? "highlighted" : "",
+        selectedPerson !== "__all__" && selectedPerson !== name ? "dimmed" : ""
+      ].filter(Boolean).join(" ");
+
+      return `
+        <div
+          class="${classes}"
+          style="height:${height}%; background:${colors[name]}"
+          title="${escapeHtml(name)}: ${count} Lerntag${count === 1 ? "" : "e"}"
+        >
+          ${selectedPerson === name && count > 0 ? `<span class="weekday-value">${count}</span>` : ""}
+        </div>
+      `;
+    }).join("");
+
+    return `
+      <div class="weekday-column">
+        <div class="weekday-bars">${bars}</div>
+        <div class="weekday-label">${day}</div>
+      </div>
+    `;
+  }).join("");
+
+  summary.innerHTML = WEEKDAYS.map((day, weekday) => {
+    const total = habits.people.reduce((sum, name) => sum + habits.counts[name][weekday], 0);
+    return `<div>${WEEKDAY_SHORT[weekday]}: ${total}</div>`;
+  }).join("");
+
+  if (selectedPerson === "__all__") {
+    const totalAcrossPeople = WEEKDAYS.map((_, index) =>
+      habits.people.reduce((sum, name) => sum + habits.counts[name][index], 0)
+    );
+    const maxDayCount = Math.max(...totalAcrossPeople);
+    const mostFrequentDays = WEEKDAYS.filter((_, index) => totalAcrossPeople[index] === maxDayCount);
+
+    selectedHabit.innerHTML = `
+      <div class="mini">Über alle Personen</div>
+      <strong>${mostFrequentDays.join(" & ")}</strong>
+      <span class="mini"> · ${maxDayCount} aufgezeichnete Lerntage insgesamt an diesem Wochentag.</span>
+    `;
+  } else {
+    const counts = habits.counts[selectedPerson];
+    const max = Math.max(...counts);
+    const mostFrequent = WEEKDAYS.filter((_, index) => counts[index] === max);
+
+    selectedHabit.innerHTML = `
+      <div class="mini">Ausgewählte Person: ${escapeHtml(selectedPerson)}</div>
+      <strong>${mostFrequent.join(" & ")}</strong>
+      <span class="mini"> · ${max} Lerntag${max === 1 ? "" : "e"} an diesem Wochentag.</span>
+    `;
   }
 }
 
-
 /* =========================================================
-   3. CONSISTENCY
+   5. BESTÄNDIGKEIT
    ========================================================= */
 
-/*
-  IMPORTANT:
-  Your Claude conversation never settled on a single definition
-  of "consistency".
-
-  For this first version, we define it as:
-
-      average number of distinct days studied per recorded week
-
-  Example:
-      Week 1: studied on 5 different days
-      Week 2: studied on 3 different days
-      Week 3: studied on 4 different days
-
-      average = (5 + 3 + 4) / 3 = 4.0 days/week
-
-  This is easy to understand and easy to replace later.
-*/
-
 function computeConsistency(entries) {
-  /*
-    We need a structure like:
-
-    daysByWeek[week][person] = Set of dates they studied
-
-    A Set prevents two entries on the same day from counting
-    as two separate study days.
-  */
-
   const daysByWeek = {};
 
   for (const entry of entries) {
     const week = getWeekStart(entry.timestamp);
-    const date = new Date(entry.timestamp).toISOString().split("T")[0];
+    const date = dateKeyLocal(entry.timestamp);
 
-    if (!(week in daysByWeek)) {
-      daysByWeek[week] = {};
-    }
-
-    if (!(entry.name in daysByWeek[week])) {
-      daysByWeek[week][entry.name] = new Set();
-    }
+    if (!daysByWeek[week]) daysByWeek[week] = {};
+    if (!daysByWeek[week][entry.name]) daysByWeek[week][entry.name] = new Set();
 
     daysByWeek[week][entry.name].add(date);
   }
 
-  /*
-    Now convert the sets into per-person weekly day counts.
-  */
-
   const personWeeklyDays = {};
 
-  for (const week in daysByWeek) {
-    for (const name in daysByWeek[week]) {
-      if (!(name in personWeeklyDays)) {
-        personWeeklyDays[name] = [];
-      }
-
-      personWeeklyDays[name].push(
-        daysByWeek[week][name].size
-      );
+  for (const week of Object.keys(daysByWeek)) {
+    for (const name of Object.keys(daysByWeek[week])) {
+      if (!personWeeklyDays[name]) personWeeklyDays[name] = [];
+      personWeeklyDays[name].push(daysByWeek[week][name].size);
     }
   }
 
-  /*
-    Calculate average days studied per week.
-  */
-
-  const results = [];
-
-  for (const name in personWeeklyDays) {
-    const weeklyCounts = personWeeklyDays[name];
-
-    const totalDays = weeklyCounts.reduce(
-      (sum, days) => sum + days,
-      0
-    );
-
-    const averageDaysPerWeek =
-      totalDays / weeklyCounts.length;
-
-    results.push({
-      name,
-      averageDaysPerWeek,
-      weeksRecorded: weeklyCounts.length
-    });
-  }
-
-  results.sort(
-    (a, b) => b.averageDaysPerWeek - a.averageDaysPerWeek
-  );
-
-  return results;
+  return Object.entries(personWeeklyDays)
+    .map(([name, weeklyCounts]) => {
+      const totalDays = weeklyCounts.reduce((sum, days) => sum + days, 0);
+      return {
+        name,
+        averageDaysPerWeek: totalDays / weeklyCounts.length,
+        weeksRecorded: weeklyCounts.length
+      };
+    })
+    .sort((a, b) => b.averageDaysPerWeek - a.averageDaysPerWeek);
 }
 
 function renderConsistency(results) {
   const body = document.getElementById("consistencyBody");
 
-  if (results.length === 0) {
-    body.textContent = "No data yet.";
+  if (!results.length) {
+    body.textContent = "Noch keine Daten.";
     return;
   }
 
-  const rows = results.map(result => `
-    <div class="bar-row">
-      <div>${result.name}</div>
-      <div class="bar-bg">
-        <div
-          class="bar"
-          style="width:${Math.min(result.averageDaysPerWeek / 7 * 100, 100)}%"
-        ></div>
-      </div>
-      <div class="right">${result.averageDaysPerWeek.toFixed(1)} T/W</div>
-    </div>
-  `).join("");
+  const max = results[0].averageDaysPerWeek;
 
   body.innerHTML = `
-    <div class="mini" style="margin-bottom:14px;">
-Lerntage pro Woche    </div>
-    ${rows}
+    <div class="mini" style="margin-bottom:14px;">Durchschnittliche Lerntage pro Woche</div>
+    <div class="bar-chart">
+      ${results.map(result => `
+        <div class="bar-row">
+          <div class="bar-label">${escapeHtml(result.name)}</div>
+          <div class="bar-bg">
+            <div
+              class="bar"
+              style="width:${max > 0 ? (result.averageDaysPerWeek / 7) * 100 : 0}%"
+            ></div>
+          </div>
+          <div class="right">${result.averageDaysPerWeek.toFixed(1)} T/W</div>
+        </div>
+      `).join("")}
+    </div>
   `;
 }
 
-
 /* =========================================================
-   RAW DATA TABLE
+   ROHDATEN
    ========================================================= */
 
 function renderRawTable(entries) {
@@ -824,23 +1254,22 @@ function renderRawTable(entries) {
 
   for (const entry of sorted) {
     const tr = document.createElement("tr");
-
     tr.innerHTML = `
-      <td>${formatDate(entry.timestamp)}</td>
-      <td>${entry.name}</td>
-      <td>${entry.minutes}</td>
+      <td>${escapeHtml(formatDate(entry.timestamp))}</td>
+      <td>${escapeHtml(entry.name)}</td>
+      <td>${escapeHtml(entry.minutes)}</td>
     `;
-
     tbody.appendChild(tr);
   }
 }
 
-
 /* =========================================================
-   LOAD DATA
+   DATEN LADEN
    ========================================================= */
 
 let currentEntries = [];
+let weeklyResults = [];
+let weekdayHabits = {};
 
 async function loadData() {
   const statusText = document.getElementById("statusText");
@@ -856,88 +1285,95 @@ async function loadData() {
     const data = await response.json();
 
     if (!Array.isArray(data.entries)) {
-      throw new Error("The endpoint did not return an 'entries' array.");
+      throw new Error("Der Endpunkt liefert kein 'entries'-Array.");
     }
 
     initialize(data.entries);
 
-    statusText.textContent = "Live data loaded";
+    statusText.textContent = "Live-Daten geladen";
     statusDot.classList.add("ok");
-  }
-
-  catch (error) {
-    /*
-      The fallback lets you test the website even when the Apps
-      Script is unavailable, while still telling you that live
-      loading failed.
-    */
-
+  } catch (error) {
     initialize(DEMO_ENTRIES);
 
-    statusText.textContent = "Live fetch failed — showing demo data";
+    statusText.textContent = "Live-Abruf fehlgeschlagen – Demo-Daten";
     statusDot.classList.remove("ok");
 
     console.warn("Live fetch failed:", error);
   }
 }
 
-
 /* =========================================================
-   INITIALIZE EVERYTHING
+   INITIALISIEREN
    ========================================================= */
 
 function initialize(entries) {
   currentEntries = entries;
 
   document.getElementById("entryCount").textContent =
-    `${entries.length} entries`;
+    `${entries.length} ${entries.length === 1 ? "Eintrag" : "Einträge"}`;
+
+  const people = sortedPeople(entries);
 
   document.getElementById("peopleCount").textContent =
-    `${sortedPeople(entries).length} people`;
+    `${people.length} ${people.length === 1 ? "Person" : "Personen"}`;
 
   renderRawTable(entries);
 
-  const weeklyResults = computeWeeklyWinners(entries);
+  weeklyResults = computeWeeklyWinners(entries);
   renderWeeklyWinners(weeklyResults);
+  renderWeeklyWinCounts(weeklyResults);
 
   const mostTimeResult = computeMostTimeStudied(entries);
   renderMostTimeStudied(mostTimeResult);
+
+  renderPersonOptions(people);
+
+  weekdayHabits = computeWeekdayHabits(entries);
+  renderWeekdayHabits(weekdayHabits, "__all__");
 
   const consistencyResults = computeConsistency(entries);
   renderConsistency(consistencyResults);
 }
 
-
 /* =========================================================
-   BUTTON
+   BEDIENUNG
    ========================================================= */
 
-document
-  .getElementById("reloadButton")
+document.getElementById("reloadButton")
   .addEventListener("click", loadData);
 
-document
-  .getElementById("weekSelect")
+document.getElementById("weekSelect")
   .addEventListener("change", function () {
-    const selected = this.value;
-
-    const results = computeWeeklyWinners(currentEntries);
-
-    const result = results.find(r => r.week === selected);
-
-    if (!result) return;
-
-    document.getElementById("currentWeekWinner").innerHTML = `
-      <div class="mini">Ausgewählte Woche</div>
-      <div class="winner-name">${result.winners.join(" & ")}</div>
-      <div class="mini">${result.minutes} minutes · ${formatHours(result.minutes)}</div>
-    `;
+    renderSelectedWeek(weeklyResults, this.value);
   });
 
+document.getElementById("prevWeekButton")
+  .addEventListener("click", function () {
+    const select = document.getElementById("weekSelect");
+    if (!select.options.length) return;
 
-/* Start the page. */
+    select.selectedIndex = Math.min(
+      select.selectedIndex + 1,
+      select.options.length - 1
+    );
+    renderSelectedWeek(weeklyResults, select.value);
+  });
+
+document.getElementById("nextWeekButton")
+  .addEventListener("click", function () {
+    const select = document.getElementById("weekSelect");
+    if (!select.options.length) return;
+
+    select.selectedIndex = Math.max(select.selectedIndex - 1, 0);
+    renderSelectedWeek(weeklyResults, select.value);
+  });
+
+document.getElementById("personSelect")
+  .addEventListener("change", function () {
+    renderWeekdayHabits(weekdayHabits, this.value);
+  });
+
 loadData();
-
 </script>
 </body>
 </html>
