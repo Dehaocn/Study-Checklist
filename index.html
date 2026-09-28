@@ -21,7 +21,45 @@
       --gold: #c18d4f;
       --green: #8b9a0e;
       --radius: 18px;
+      --bar-bg: #ece7d0;
+      --tint: rgba(74,24,6,.04);
+      --glow: rgba(139,154,14,.13);
     }
+    /* Wetter-Themes */
+    body[data-weather="sun"][data-time="day"] {
+      --bg:#faf4df; --card:#fffdf7; --card-2:#f7efd5; --text:#4a2608; --muted:#977a55;
+      --line:#eadfbe; --accent:#c88922; --gold:#e4a83f; --bar-bg:#eee2c2;
+      --tint:rgba(74,38,8,.035); --glow:rgba(244,189,72,.24);
+    }
+    body[data-weather="sun"][data-time="day"]::before {
+      content:""; position:fixed; top:-120px; right:-90px; width:340px; height:340px; border-radius:50%;
+      pointer-events:none; z-index:0;
+      background:radial-gradient(circle at center, rgba(255,210,102,.62) 0 16%, rgba(255,208,97,.30) 32%, rgba(255,208,97,.13) 48%, transparent 72%);
+      filter:blur(2px);
+    }
+    body[data-time="night"] { --bg:#1e1a10; --card:#2a2518; --card-2:#342e1f; --text:#f7f4e8; --muted:#b5a68a; --line:#453d29; --accent:#a9b82a; --gold:#d9a566; --bar-bg:#443c28; --tint:rgba(247,244,232,.05); --glow:rgba(169,184,42,.14); }
+    body[data-weather="cloud"] { --bg:#edf1f5; --card:#ffffff; --card-2:#e5ebf0; --text:#273642; --muted:#71818d; --line:#d2dbe2; --accent:#71879a; --gold:#8fa2b2; --bar-bg:#d5dfe6; --tint:rgba(39,54,66,.04); --glow:rgba(145,162,176,.22); }
+    body[data-weather="cloud"][data-time="night"] { --bg:#171e26; --card:#202b35; --card-2:#2a3742; --text:#e8eef2; --muted:#9daeb9; --line:#3a4854; --accent:#8ea4b5; --gold:#9eafbc; --bar-bg:#34424d; --tint:rgba(232,238,242,.05); --glow:rgba(142,164,181,.13); }
+    body[data-weather="cloud"]::before, body[data-weather="cloud"]::after {
+      content:""; position:fixed; pointer-events:none; z-index:0; border-radius:999px; filter:blur(10px); opacity:.72;
+    }
+    body[data-weather="cloud"]::before {
+      width:360px; height:120px; top:70px; left:-70px;
+      background:radial-gradient(circle at 25% 65%, rgba(255,255,255,.92) 0 23%, transparent 24%),
+                 radial-gradient(circle at 46% 48%, rgba(255,255,255,.96) 0 31%, transparent 32%),
+                 radial-gradient(circle at 68% 67%, rgba(255,255,255,.9) 0 24%, transparent 25%),
+                 linear-gradient(rgba(255,255,255,.72), rgba(255,255,255,.72));
+    }
+    body[data-weather="cloud"]::after {
+      width:430px; height:130px; top:210px; right:-120px;
+      background:radial-gradient(circle at 24% 67%, rgba(255,255,255,.72) 0 22%, transparent 23%),
+                 radial-gradient(circle at 47% 46%, rgba(255,255,255,.82) 0 30%, transparent 31%),
+                 radial-gradient(circle at 72% 68%, rgba(255,255,255,.7) 0 24%, transparent 25%),
+                 linear-gradient(rgba(255,255,255,.62), rgba(255,255,255,.62));
+    }
+    body[data-weather="rain"] { --bg:#e4edf7; --card:#ffffff; --card-2:#eaf1f8; --text:#0f2a44; --muted:#5f7a94; --line:#cfdcea; --accent:#3b82c4; --gold:#5b9bd5; --bar-bg:#d5e3f1; --tint:rgba(15,42,68,.04); --glow:rgba(59,130,196,.16); }
+    body[data-weather="rain"][data-time="night"] { --bg:#0e1824; --card:#172636; --card-2:#1e3145; --text:#e6eef7; --muted:#8fa6bd; --line:#2b4058; --accent:#5aa5e6; --gold:#7db4e8; --bar-bg:#2b4058; --tint:rgba(230,238,247,.05); --glow:rgba(90,165,230,.14); }
+    #fx { position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
 
     * { box-sizing: border-box; }
 
@@ -30,19 +68,25 @@
       font-family: "Nunito", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
                    "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(139,154,14,.13), transparent 30rem),
+        radial-gradient(circle at top left, var(--glow), transparent 30rem),
         var(--bg);
       color: var(--text);
       line-height: 1.45;
     }
 
     .wrap {
+      position: relative;
+      z-index: 1;
       width: min(1100px, calc(100% - 32px));
       margin: 0 auto;
       padding: 42px 0 70px;
     }
 
-    header { margin-bottom: 28px; }
+    header { margin-bottom: 28px; position: relative; }
+    .wx-badge { position: absolute; top: 0; right: 0; text-align: right; line-height: 1.25; }
+    .wx-main { font-size: 1.7rem; font-weight: 800; letter-spacing: -.02em; }
+    .wx-sub { color: var(--muted); font-size: .84rem; }
+    @media (max-width: 700px) { .wx-badge { position: static; text-align: left; margin-bottom: 14px; } }
 
     .eyebrow {
       color: var(--accent);
@@ -80,7 +124,7 @@
       padding: 8px 11px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(74,24,6,.04);
+      background: var(--tint);
       color: var(--muted);
       font-size: .82rem;
     }
@@ -102,7 +146,8 @@
 
     .card {
       grid-column: span 12;
-      background: var(--card);
+      background: color-mix(in srgb, var(--card) 86%, transparent);
+      backdrop-filter: blur(8px);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       padding: 22px;
@@ -178,7 +223,7 @@
       font-size: .75rem;
       text-transform: uppercase;
       letter-spacing: .06em;
-      background: rgba(74,24,6,.035);
+      background: var(--tint);
     }
 
     tr:last-child td { border-bottom: 0; }
@@ -280,7 +325,7 @@
 
     .bar-bg {
       height: 12px;
-      background: #ece7d0;
+      background: var(--bar-bg);
       border-radius: 999px;
       overflow: hidden;
     }
@@ -288,7 +333,7 @@
     .bar {
       height: 100%;
       min-width: 2px;
-      background: linear-gradient(90deg, var(--accent), #c18d4f);
+      background: linear-gradient(90deg, var(--accent), var(--gold));
       border-radius: inherit;
       transition: width .4s ease, opacity .25s ease;
     }
@@ -478,6 +523,15 @@
       font-size: .78rem;
     }
 
+    .card-head.row { flex-direction: row !important; align-items: center; }
+    .switch { position: relative; width: 46px; height: 26px; flex: 0 0 auto; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; inset: 0; background: var(--bar-bg); border: 1px solid var(--line);
+      border-radius: 999px; cursor: pointer; transition: .2s; }
+    .slider::before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px;
+      border-radius: 50%; background: var(--accent); transition: .2s; }
+    .switch input:checked + .slider::before { transform: translateX(20px); }
+
     @media (max-width: 700px) {
       .wrap { width: min(100% - 20px, 1100px); padding-top: 24px; }
       .card { padding: 17px; }
@@ -500,9 +554,15 @@
   </style>
 </head>
 
-<body>
+<body data-weather="sun" data-time="day">
+  <canvas id="fx"></canvas>
   <main class="wrap">
     <header>
+      <div class="wx-badge" id="wxBadge">
+        <div class="wx-main"><span id="wxIcon">⏳</span> <span id="wxTemp">–</span></div>
+        <div class="wx-sub" id="wxDesc">Kaarst</div>
+        <div class="wx-sub" id="wxTime"></div>
+      </div>
       <div class="eyebrow">Study Challenge</div>
       <h1>Statistiken</h1>
       <p class="subtitle">Wöchentliche Gewinner, Gesamtlernzeit und eure Lerngewohnheiten.</p>
@@ -514,6 +574,10 @@
         </div>
         <div class="pill" id="entryCount">0 Einträge</div>
         <div class="pill" id="peopleCount">0 Personen</div>
+        <div class="pill">
+          <span class="dot" id="weatherDot"></span>
+          <span id="weatherStatus">Wetterdaten werden geladen …</span>
+        </div>
       </div>
     </header>
 
@@ -552,16 +616,15 @@
 
       </article>
 
-      <!-- 2. MOST WEEKLY WINS -->
+      <!-- 5. CONSISTENCY -->
       <article class="card half">
         <div class="card-head">
           <div>
-            <h2>Wer hat die meisten Wochen gewonnen?</h2>
+            <h2>Beständigkeit</h2>
           </div>
         </div>
 
-        <div id="weeklyWinLeader" class="empty"></div>
-        <div id="weeklyWinsBars" class="bar-chart" style="margin-top:18px;"></div>
+        <div id="consistencyBody" class="empty">Noch keine Daten.</div>
       </article>
 
       <!-- 3. MOST TIME STUDIED -->
@@ -578,10 +641,11 @@
 
       <!-- GESAMTFORTSCHRITT -->
       <article class="card">
-        <div class="card-head">
-          <div>
-            <h2>Gesamtfortschritt</h2>
-          </div>
+        <div class="card-head row">
+          <div><h2 id="progressTitle">Gesamtfortschritt</h2></div>
+          <label class="switch" title="Gesamt / Ø pro Tag">
+            <input type="checkbox" id="progressToggle"><span class="slider"></span>
+          </label>
         </div>
         <div id="cumulativeChart"></div>
       </article>
@@ -605,15 +669,16 @@
         <div id="selectedHabit" class="selected-habit"></div>
       </article>
 
-      <!-- 5. CONSISTENCY -->
-      <article class="card half">
+      <!-- 2. MOST WEEKLY WINS -->
+      <article class="card">
         <div class="card-head">
           <div>
-            <h2>Beständigkeit</h2>
+            <h2>Wer hat die meisten Wochen gewonnen?</h2>
           </div>
         </div>
 
-        <div id="consistencyBody" class="empty">Noch keine Daten.</div>
+        <div id="weeklyWinLeader" class="empty"></div>
+        <div id="weeklyWinsBars" class="bar-chart" style="margin-top:18px;"></div>
       </article>
 
       <!-- 6. DATA COLLECTION -->
@@ -925,7 +990,9 @@ function computeWeeklyWinCounts(results) {
     .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "de"));
 }
 
-function renderWeeklyWinCounts(results) {
+function renderWeeklyWinCounts(allResults) {
+  const currentWeek = getWeekStart(new Date());
+  const results = allResults.filter(r => r.week !== currentWeek);
   const leader = document.getElementById("weeklyWinLeader");
   const bars = document.getElementById("weeklyWinsBars");
   const ranking = computeWeeklyWinCounts(results);
@@ -1249,7 +1316,7 @@ function computeCumulativeHours(entries) {
   });
 }
 
-function renderCumulativeChart(points) {
+function renderCumulativeChart(points, isRate = false) {
   const container = document.getElementById("cumulativeChart");
 
   if (!points.length) {
@@ -1266,7 +1333,7 @@ function renderCumulativeChart(points) {
   const startTime = points[0].date.getTime();
   const endTime = points[points.length - 1].date.getTime();
   const timeSpan = Math.max(1, endTime - startTime);
-  const totalHours = Math.max(1, points[points.length - 1].hours);
+  const totalHours = Math.max(isRate ? 0.1 : 1, ...points.map(p => p.hours));
 
   // y-axis: round the top up to a clean step (1, 2, 5, 10, 20, ...)
   const rawStep = totalHours / 4;
@@ -1284,7 +1351,7 @@ function renderCumulativeChart(points) {
     const label = step >= 1 ? v.toFixed(0) : v.toFixed(1);
     yGrid += `
       <line x1="${marginLeft}" y1="${py.toFixed(1)}" x2="${width - marginRight}" y2="${py.toFixed(1)}" style="stroke:var(--line)" stroke-width="1"/>
-      <text x="${marginLeft - 8}" y="${(py + 4).toFixed(1)}" font-size="11" style="fill:var(--muted)" text-anchor="end">${label} h</text>
+      <text x="${marginLeft - 8}" y="${(py + 4).toFixed(1)}" font-size="11" style="fill:var(--muted)" text-anchor="end">${label} h${isRate ? "/T" : ""}</text>
     `;
   }
 
@@ -1336,8 +1403,32 @@ function renderCumulativeChart(points) {
       <line x1="${marginLeft}" y1="${marginTop}" x2="${marginLeft}" y2="${bottom}" style="stroke:var(--muted)" stroke-width="1"/>
       <line x1="${marginLeft}" y1="${bottom}" x2="${width - marginRight}" y2="${bottom}" style="stroke:var(--muted)" stroke-width="1"/>
     </svg>
-    <div class="mini" style="margin-top:8px;">Insgesamt ${totalHours.toFixed(1)} h seit ${escapeHtml(formatDate(points[0].date.toISOString()))}</div>
+    <div class="mini" style="margin-top:8px;">${isRate ? `Zuletzt: ${points[points.length - 1].hours.toFixed(1)} h pro Tag (Ø 7 Tage)` : `Insgesamt ${points[points.length - 1].hours.toFixed(1)} h seit ${escapeHtml(formatDate(points[0].date.toISOString()))}`}</div>
   `;
+}
+
+function computeDailyAverage(entries) {
+  if (!entries.length) return [];
+  const perDay = {};
+  for (const e of entries) {
+    const k = dateKeyLocal(e.timestamp);
+    perDay[k] = (perDay[k] || 0) + Number(e.minutes);
+  }
+  const keys = Object.keys(perDay).sort();
+  const days = [];
+  const last = dateFromKey(keys[keys.length - 1]);
+  for (let d = dateFromKey(keys[0]); d <= last; d.setDate(d.getDate() + 1)) days.push(new Date(d));
+  return days.map((d, i) => {
+    const win = days.slice(Math.max(0, i - 6), i + 1);
+    const sum = win.reduce((t, w) => t + (perDay[dateKeyLocal(w)] || 0), 0);
+    return { date: d, hours: sum / win.length / 60 };
+  });
+}
+
+function renderProgress() {
+  const rate = document.getElementById("progressToggle").checked;
+  document.getElementById("progressTitle").textContent = rate ? "Ø Lernzeit pro Tag" : "Gesamtfortschritt";
+  renderCumulativeChart(rate ? computeDailyAverage(currentEntries) : computeCumulativeHours(currentEntries), rate);
 }
 
 /* =========================================================
@@ -1426,7 +1517,7 @@ function initialize(entries) {
   const mostTimeResult = computeMostTimeStudied(entries);
   renderMostTimeStudied(mostTimeResult);
 
-  renderCumulativeChart(computeCumulativeHours(entries));
+  renderProgress();
 
   renderPersonOptions(people);
 
@@ -1436,6 +1527,139 @@ function initialize(entries) {
   const consistencyResults = computeConsistency(entries);
   renderConsistency(consistencyResults);
 }
+
+/* =========================================================
+   WETTER-THEMA (Kaarst)
+   ========================================================= */
+
+const WEATHER_URL =
+  "https://api.open-meteo.com/v1/forecast?latitude=51.23&longitude=6.62&current=weather_code,is_day,temperature_2m&timezone=auto";
+
+const fx = document.getElementById("fx");
+const fxCtx = fx.getContext("2d");
+const drops = Array.from({ length: 150 }, () => ({
+  x: Math.random(), y: Math.random(), l: 12 + Math.random() * 16, v: .012 + Math.random() * .012
+}));
+
+function resizeFx() { fx.width = innerWidth; fx.height = innerHeight; }
+addEventListener("resize", resizeFx);
+resizeFx();
+
+function drawFx(t) {
+  const { weather, time } = document.body.dataset;
+  const w = fx.width, h = fx.height;
+  fxCtx.clearRect(0, 0, w, h);
+
+  if (weather === "cloud") {
+    const drift = Math.sin(t / 5000) * 18;
+    fxCtx.fillStyle = time === "night" ? "rgba(210,224,235,.025)" : "rgba(255,255,255,.06)";
+    fxCtx.beginPath();
+    fxCtx.ellipse(w * 0.16 + drift, h * 0.22, 150, 55, 0, 0, Math.PI * 2);
+    fxCtx.fill();
+    fxCtx.beginPath();
+    fxCtx.ellipse(w * 0.80 - drift, h * 0.72, 190, 65, 0, 0, Math.PI * 2);
+    fxCtx.fill();
+  } else if (weather === "rain") {
+    fxCtx.lineWidth = 1.2;
+    fxCtx.strokeStyle = time === "night" ? "rgba(150,190,235,.45)" : "rgba(59,130,196,.5)";
+    fxCtx.beginPath();
+    for (const d of drops) {
+      d.y += d.v;
+      d.x -= d.v * 0.25;
+      if (d.y > 1.05) { d.y = -0.05; d.x = Math.random() * 1.2; }
+      const x = d.x * w, y = d.y * h;
+      fxCtx.moveTo(x, y);
+      fxCtx.lineTo(x - d.l * 0.25, y + d.l);
+    }
+    fxCtx.stroke();
+  }
+
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) requestAnimationFrame(drawFx);
+}
+
+function describeWeather(code, day) {
+  if (code === 0) return day ? ["☀️", "Klar"] : ["🌙", "Klar"];
+  if (code === 1) return day ? ["🌤️", "Überwiegend klar"] : ["🌙", "Überwiegend klar"];
+  if (code === 2) return ["⛅", "Teils bewölkt"];
+  if (code === 3) return ["☁️", "Bedeckt"];
+  if (code === 45 || code === 48) return ["🌫️", "Nebel"];
+  if (code >= 51 && code <= 57) return ["🌦️", "Nieselregen"];
+  if (code >= 61 && code <= 67) return ["🌧️", "Regen"];
+  if (code >= 71 && code <= 77) return ["❄️", "Schnee"];
+  if (code >= 80 && code <= 82) return ["🌧️", "Regenschauer"];
+  if (code === 85 || code === 86) return ["🌨️", "Schneeschauer"];
+  if (code >= 95) return ["⛈️", "Gewitter"];
+  return ["🌡️", "Unbekannt"];
+}
+
+function updateClock() {
+  document.getElementById("wxTime").textContent =
+    new Date().toLocaleTimeString("de-DE", { timeZone: "Europe/Berlin", hour: "2-digit", minute: "2-digit" }) + " Uhr";
+}
+
+async function loadWeather() {
+  const dot = document.getElementById("weatherDot");
+  const status = document.getElementById("weatherStatus");
+  let code = 0, day = 1, temp = null, ok = false;
+  try {
+    const res = await fetch(WEATHER_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const cur = (await res.json()).current;
+    code = cur.weather_code;
+    day = cur.is_day;
+    temp = cur.temperature_2m;
+    ok = true;
+  } catch (e) {
+    console.warn("Weather fetch failed:", e);
+    const hour = new Date().getHours();
+    day = hour >= 7 && hour < 20 ? 1 : 0;
+  }
+  const rain = (code >= 51 && code <= 67) || code >= 80;
+  const weather = rain ? "rain" : (code <= 2 ? "sun" : "cloud");
+  document.body.dataset.weather = weather;
+  document.body.dataset.time = day ? "day" : "night";
+
+  const [icon, label] = describeWeather(code, day);
+  const effect = weather === "rain" ? "Regen-Effekt aktiv"
+    : (weather === "cloud" ? "Wolken-Design aktiv"
+    : (weather === "sun" && day ? "Sonnenlicht aktiv" : "kein Effekt"));
+  if (ok) {
+    dot.classList.add("ok");
+    status.textContent = `Wetter geladen (Kaarst) · ${effect}`;
+    document.getElementById("wxIcon").textContent = icon;
+    document.getElementById("wxTemp").textContent = `${Math.round(temp)} °C`;
+    document.getElementById("wxDesc").textContent = `${label} · Kaarst`;
+  } else {
+    dot.classList.remove("ok");
+    status.textContent = "Wetter-Abruf fehlgeschlagen – Standard-Design";
+    document.getElementById("wxIcon").textContent = "⚠️";
+    document.getElementById("wxTemp").textContent = "– °C";
+    document.getElementById("wxDesc").textContent = "Kaarst";
+  }
+}
+
+// Lokale Design-Vorschau über die Browser-Konsole:
+// setWeatherPreview("sun", "day");
+// setWeatherPreview("cloud", "day");
+// setWeatherPreview("rain", "day");
+// setWeatherPreview("sun", "night");
+// setWeatherPreview("cloud", "night");
+// setWeatherPreview("rain", "night");
+function setWeatherPreview(weather, time = "day") {
+  document.body.dataset.weather = weather;
+  document.body.dataset.time = time;
+  const [icon, label] = describeWeather(weather === "sun" ? 0 : weather === "rain" ? 61 : 3, time === "day" ? 1 : 0);
+  document.getElementById("wxIcon").textContent = icon;
+  document.getElementById("wxDesc").textContent = `${label} · Vorschau`;
+  document.getElementById("wxTemp").textContent = "– °C";
+  document.getElementById("weatherStatus").textContent = `Vorschau: ${label}`;
+}
+
+updateClock();
+setInterval(updateClock, 30000);
+loadWeather();
+setInterval(loadWeather, 15 * 60 * 1000);
+requestAnimationFrame(drawFx);
 
 /* =========================================================
    BEDIENUNG
@@ -1453,6 +1677,8 @@ document.getElementById("personSelect")
   .addEventListener("change", function () {
     renderWeekdayHabits(weekdayHabits, this.value);
   });
+
+document.getElementById("progressToggle").addEventListener("change", renderProgress);
 
 loadData();
 </script>
