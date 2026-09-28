@@ -4,19 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Study Challenge — Statistiken</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #0f1117;
-      --card: #171a23;
-      --card-2: #1e2230;
-      --text: #f4f5f7;
-      --muted: #9da4b2;
-      --line: #2b3040;
-      --accent: #7c9cff;
-      --accent-soft: rgba(124,156,255,.16);
-      --gold: #f4c95d;
-      --green: #6dd18c;
+      --bg: #f7f4e8;
+      --card: #ffffff;
+      --card-2: #f4f1e2;
+      --text: #4a1806;
+      --muted: #8f7c62;
+      --line: #e8e2cc;
+      --accent: #8b9a0e;
+      --accent-soft: rgba(139,154,14,.14);
+      --gold: #c18d4f;
+      --green: #8b9a0e;
       --radius: 18px;
     }
 
@@ -24,10 +27,10 @@
 
     body {
       margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+      font-family: "Nunito", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
                    "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(124,156,255,.13), transparent 30rem),
+        radial-gradient(circle at top left, rgba(139,154,14,.13), transparent 30rem),
         var(--bg);
       color: var(--text);
       line-height: 1.45;
@@ -77,7 +80,7 @@
       padding: 8px 11px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255,255,255,.025);
+      background: rgba(74,24,6,.04);
       color: var(--muted);
       font-size: .82rem;
     }
@@ -99,11 +102,11 @@
 
     .card {
       grid-column: span 12;
-      background: rgba(23,26,35,.92);
+      background: var(--card);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       padding: 22px;
-      box-shadow: 0 12px 35px rgba(0,0,0,.18);
+      box-shadow: 0 10px 28px rgba(74,24,6,.07);
     }
 
     .card.half { grid-column: span 6; }
@@ -175,7 +178,7 @@
       font-size: .75rem;
       text-transform: uppercase;
       letter-spacing: .06em;
-      background: rgba(255,255,255,.02);
+      background: rgba(74,24,6,.035);
     }
 
     tr:last-child td { border-bottom: 0; }
@@ -184,7 +187,7 @@
       display: inline-block;
       padding: 4px 8px;
       border-radius: 8px;
-      background: rgba(244,201,93,.12);
+      background: rgba(193,141,79,.18);
       color: var(--gold);
       font-weight: 700;
       font-size: .78rem;
@@ -233,7 +236,7 @@
       border: 1px solid var(--line);
       border-radius: 14px;
       padding: 15px;
-      background: rgba(255,255,255,.018);
+      background: var(--card-2);
     }
 
     .chart-card + .chart-card { margin-top: 14px; }
@@ -246,7 +249,7 @@
       align-items: center;
       padding: 14px 16px;
       background: var(--accent-soft);
-      border: 1px solid rgba(124,156,255,.22);
+      border: 1px solid rgba(139,154,14,.35);
       border-radius: 12px;
       margin-bottom: 16px;
     }
@@ -277,7 +280,7 @@
 
     .bar-bg {
       height: 12px;
-      background: #282d3a;
+      background: #ece7d0;
       border-radius: 999px;
       overflow: hidden;
     }
@@ -285,7 +288,7 @@
     .bar {
       height: 100%;
       min-width: 2px;
-      background: linear-gradient(90deg, var(--accent), #b7c7ff);
+      background: linear-gradient(90deg, var(--accent), #c18d4f);
       border-radius: inherit;
       transition: width .4s ease, opacity .25s ease;
     }
@@ -357,6 +360,8 @@
 
     .weekday-person-bar {
       width: 20px;
+      flex: 0 1 20px;
+      min-width: 3px;
       min-height: 2px;
       border-radius: 7px 7px 2px 2px;
       opacity: .72;
@@ -414,7 +419,7 @@
     .data-details {
       border: 1px solid var(--line);
       border-radius: 14px;
-      background: rgba(255,255,255,.02);
+      background: var(--card-2);
       overflow: hidden;
     }
 
@@ -456,7 +461,7 @@
       margin-top: 12px;
       padding: 12px 14px;
       border-radius: 12px;
-      background: rgba(255,255,255,.025);
+      background: var(--card-2);
       border: 1px solid var(--line);
     }
 
@@ -481,11 +486,16 @@
       .controls select { max-width: 100%; }
       .bar-row { grid-template-columns: 82px 1fr 70px; }
       .weekday-chart {
-        grid-template-columns: repeat(7, 86px);
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 4px;
       }
+      .weekday-bars { gap: 2px; padding: 0 2px; }
+      .weekday-column { min-width: 0; }
       .weekday-summary {
-        grid-template-columns: repeat(7, 86px);
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 4px;
       }
+      .weekday-label { font-size: .68rem; }
     }
   </style>
 </head>
@@ -513,17 +523,11 @@
         <div class="card-head">
           <div>
             <h2>Wöchentliche Gewinner</h2>
-            <p class="description">
-              Wähle eine beliebige Woche aus und vergleiche die Lernzeit aller Personen.
-              Die Woche wird anhand ihres Montags benannt.
-            </p>
           </div>
 
           <div class="controls">
-            <button id="prevWeekButton" title="Vorherige Woche">←</button>
             <label class="mini" for="weekSelect">Woche:</label>
             <select id="weekSelect"></select>
-            <button id="nextWeekButton" title="Nächste Woche">→</button>
           </div>
         </div>
 
@@ -538,9 +542,7 @@
             <thead>
               <tr>
                 <th>Woche</th>
-                <th>Zeitraum</th>
                 <th>Sieger</th>
-                <th>Minuten</th>
                 <th>Stunden</th>
               </tr>
             </thead>
@@ -548,9 +550,6 @@
           </table>
         </div>
 
-        <p class="note">
-          Bei Gleichstand bekommen alle beteiligten Personen einen Wochen-Sieg.
-        </p>
       </article>
 
       <!-- 2. MOST WEEKLY WINS -->
@@ -558,13 +557,11 @@
         <div class="card-head">
           <div>
             <h2>Wer hat die meisten Wochen gewonnen?</h2>
-            <p class="description">Anzahl gewonnener Wochen über den gesamten verfügbaren Zeitraum.</p>
           </div>
         </div>
 
         <div id="weeklyWinLeader" class="empty"></div>
         <div id="weeklyWinsBars" class="bar-chart" style="margin-top:18px;"></div>
-        <p class="note">Bei einem geteilten ersten Platz zählt die Woche für jede Gewinnerin bzw. jeden Gewinner.</p>
       </article>
 
       <!-- 3. MOST TIME STUDIED -->
@@ -572,7 +569,6 @@
         <div class="card-head">
           <div>
             <h2>Meiste Zeit gelernt</h2>
-            <p class="description">Gesamte bisherige Lernzeit.</p>
           </div>
         </div>
 
@@ -580,15 +576,21 @@
         <div id="allTimeBars" style="margin-top:18px;" class="bar-chart"></div>
       </article>
 
+      <!-- GESAMTFORTSCHRITT -->
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h2>Gesamtfortschritt</h2>
+          </div>
+        </div>
+        <div id="cumulativeChart"></div>
+      </article>
+
       <!-- 4. WEEKDAY HABITS -->
       <article class="card">
         <div class="card-head">
           <div>
             <h2>An welchen Wochentagen wird am häufigsten gelernt?</h2>
-            <p class="description">
-              Gezählt werden unterschiedliche Lerntage pro Person. Ohne Auswahl siehst du alle Personen zusammen;
-              mit einer Auswahl wird die betreffende Person hervorgehoben.
-            </p>
           </div>
 
           <div class="controls">
@@ -601,9 +603,6 @@
         <div id="weekdayChart" class="weekday-chart"></div>
         <div id="weekdaySummary" class="weekday-summary"></div>
         <div id="selectedHabit" class="selected-habit"></div>
-        <p class="note">
-          Mehrere Einträge am selben Kalendertag zählen als ein Lerntag. Die Reihenfolge ist Montag bis Sonntag.
-        </p>
       </article>
 
       <!-- 5. CONSISTENCY -->
@@ -611,7 +610,6 @@
         <div class="card-head">
           <div>
             <h2>Beständigkeit</h2>
-            <p class="description">Durchschnittliche Zahl unterschiedlicher Lerntage pro aufgezeichneter Woche.</p>
           </div>
         </div>
 
@@ -626,7 +624,6 @@
             <div class="card-head">
               <div>
                 <h2>Datensammlung</h2>
-                <p class="description">Aufgezeichnete Einträge aus der Lern-Challenge.</p>
               </div>
               <button id="reloadButton">Neu laden</button>
             </div>
@@ -854,9 +851,7 @@ function renderWeeklyWinners(results) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${escapeHtml(formatWeekName(result.week))}</td>
-      <td>${escapeHtml(getWeekRange(result.week))}</td>
       <td>${result.winners.map(escapeHtml).join(" & ")}</td>
-      <td>${result.minutes}</td>
       <td>${formatHours(result.minutes)}</td>
     `;
     table.appendChild(tr);
@@ -1241,6 +1236,111 @@ function renderConsistency(results) {
 }
 
 /* =========================================================
+   GESAMTFORTSCHRITT (line chart, x-axis = months)
+   ========================================================= */
+
+function computeCumulativeHours(entries) {
+  const sorted = [...entries].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+  let runningMinutes = 0;
+
+  return sorted.map(e => {
+    runningMinutes += Number(e.minutes);
+    return { date: new Date(e.timestamp), hours: runningMinutes / 60 };
+  });
+}
+
+function renderCumulativeChart(points) {
+  const container = document.getElementById("cumulativeChart");
+
+  if (!points.length) {
+    container.innerHTML = '<div class="empty">Noch keine Daten.</div>';
+    return;
+  }
+
+  const width = 800, height = 290;
+  const marginLeft = 54, marginRight = 16, marginTop = 14, marginBottom = 32;
+  const plotW = width - marginLeft - marginRight;
+  const plotH = height - marginTop - marginBottom;
+  const bottom = marginTop + plotH;
+
+  const startTime = points[0].date.getTime();
+  const endTime = points[points.length - 1].date.getTime();
+  const timeSpan = Math.max(1, endTime - startTime);
+  const totalHours = Math.max(1, points[points.length - 1].hours);
+
+  // y-axis: round the top up to a clean step (1, 2, 5, 10, 20, ...)
+  const rawStep = totalHours / 4;
+  const mag = Math.pow(10, Math.floor(Math.log10(rawStep)));
+  const norm = rawStep / mag;
+  const step = (norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 5 ? 5 : 10) * mag;
+  const niceMax = Math.ceil(totalHours / step) * step;
+
+  const x = t => marginLeft + ((t - startTime) / timeSpan) * plotW;
+  const y = h => marginTop + plotH - (h / niceMax) * plotH;
+
+  let yGrid = "";
+  for (let v = 0; v <= niceMax + 1e-9; v += step) {
+    const py = y(v);
+    const label = step >= 1 ? v.toFixed(0) : v.toFixed(1);
+    yGrid += `
+      <line x1="${marginLeft}" y1="${py.toFixed(1)}" x2="${width - marginRight}" y2="${py.toFixed(1)}" style="stroke:var(--line)" stroke-width="1"/>
+      <text x="${marginLeft - 8}" y="${(py + 4).toFixed(1)}" font-size="11" style="fill:var(--muted)" text-anchor="end">${label} h</text>
+    `;
+  }
+
+  const coords = [
+    { x: x(startTime), y: y(0) },
+    ...points.map(p => ({ x: x(p.date.getTime()), y: y(p.hours) }))
+  ];
+  const linePath = coords.map((c, i) => `${i === 0 ? "M" : "L"} ${c.x.toFixed(1)} ${c.y.toFixed(1)}`).join(" ");
+  const lastPt = coords[coords.length - 1];
+  const areaPath = `${linePath} L ${lastPt.x.toFixed(1)} ${bottom} L ${coords[0].x.toFixed(1)} ${bottom} Z`;
+
+  // x-axis: one label per month, plus the very last date
+  const lastDate = points[points.length - 1].date;
+  const months = [];
+  const cursor = new Date(points[0].date.getFullYear(), points[0].date.getMonth(), 1);
+  while (cursor <= lastDate) {
+    months.push(new Date(cursor));
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+
+  let xLabels = "";
+  for (const m of months) {
+    const px = x(Math.max(startTime, m.getTime()));
+    xLabels += `<line x1="${px.toFixed(1)}" y1="${marginTop}" x2="${px.toFixed(1)}" y2="${bottom}" style="stroke:var(--line)" stroke-width="1" stroke-dasharray="3 4"/>`;
+    if (px <= lastPt.x - 54) { // skip if it would collide with the last-date label
+      xLabels += `<text x="${px.toFixed(1)}" y="${height - 8}" font-size="11" style="fill:var(--muted)" text-anchor="middle">${MONTHS[m.getMonth()].slice(0, 3)}</text>`;
+    }
+  }
+
+  const lastLabel = lastDate.toLocaleDateString("de-DE", { day: "numeric", month: "short" });
+  xLabels += `
+    <line x1="${lastPt.x.toFixed(1)}" y1="${bottom}" x2="${lastPt.x.toFixed(1)}" y2="${bottom + 5}" style="stroke:var(--muted)" stroke-width="1"/>
+    <text x="${lastPt.x.toFixed(1)}" y="${height - 8}" font-size="11" font-weight="700" style="fill:var(--text)" text-anchor="end">${escapeHtml(lastLabel)}</text>
+  `;
+
+  container.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" style="display:block;width:100%;height:auto;">
+      <defs>
+        <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="7" style="stroke:var(--accent)" stroke-width="2.2" stroke-opacity=".38"/>
+        </pattern>
+      </defs>
+      ${yGrid}
+      ${xLabels}
+      <path d="${areaPath}" style="fill:var(--accent)" fill-opacity=".09"/>
+      <path d="${areaPath}" fill="url(#hatch)"/>
+      <path d="${linePath}" fill="none" style="stroke:var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="${lastPt.x.toFixed(1)}" cy="${lastPt.y.toFixed(1)}" r="4.5" style="fill:var(--accent)"/>
+      <line x1="${marginLeft}" y1="${marginTop}" x2="${marginLeft}" y2="${bottom}" style="stroke:var(--muted)" stroke-width="1"/>
+      <line x1="${marginLeft}" y1="${bottom}" x2="${width - marginRight}" y2="${bottom}" style="stroke:var(--muted)" stroke-width="1"/>
+    </svg>
+    <div class="mini" style="margin-top:8px;">Insgesamt ${totalHours.toFixed(1)} h seit ${escapeHtml(formatDate(points[0].date.toISOString()))}</div>
+  `;
+}
+
+/* =========================================================
    ROHDATEN
    ========================================================= */
 
@@ -1326,6 +1426,8 @@ function initialize(entries) {
   const mostTimeResult = computeMostTimeStudied(entries);
   renderMostTimeStudied(mostTimeResult);
 
+  renderCumulativeChart(computeCumulativeHours(entries));
+
   renderPersonOptions(people);
 
   weekdayHabits = computeWeekdayHabits(entries);
@@ -1345,27 +1447,6 @@ document.getElementById("reloadButton")
 document.getElementById("weekSelect")
   .addEventListener("change", function () {
     renderSelectedWeek(weeklyResults, this.value);
-  });
-
-document.getElementById("prevWeekButton")
-  .addEventListener("click", function () {
-    const select = document.getElementById("weekSelect");
-    if (!select.options.length) return;
-
-    select.selectedIndex = Math.min(
-      select.selectedIndex + 1,
-      select.options.length - 1
-    );
-    renderSelectedWeek(weeklyResults, select.value);
-  });
-
-document.getElementById("nextWeekButton")
-  .addEventListener("click", function () {
-    const select = document.getElementById("weekSelect");
-    if (!select.options.length) return;
-
-    select.selectedIndex = Math.max(select.selectedIndex - 1, 0);
-    renderSelectedWeek(weeklyResults, select.value);
   });
 
 document.getElementById("personSelect")
